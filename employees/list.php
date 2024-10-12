@@ -13,7 +13,7 @@ if(isset($_GET['delete'])){
     }
 }
 
-$selectquery="SELECT * FROM `employees`";
+$selectquery="SELECT * from `employeeswithdepartments`;";
 $select=mysqli_query($con,$selectquery);
 $numofrows=mysqli_num_rows($select);
 ?>
@@ -30,7 +30,7 @@ $numofrows=mysqli_num_rows($select);
                 <th>email</th>
                 <th>phone</th>
                 <th>address</th>
-                <th>department ID</th>
+                <th>department</th>
                 <th>actions</th>
               </tr>
             </thead>
@@ -44,7 +44,7 @@ $numofrows=mysqli_num_rows($select);
                 <td><?= $employees['email']?></td>
                 <td><?= $employees['phone']?></td>
                 <td><?= $employees['address']?></td>
-                <td><?= $employees['department_id']?></td>
+                <td><?= $employees['department']?></td>
                 <td>
                   <a href="show.php?show=<?=$employees['id']?>" class="btn btn-info">Show</a>
                   <a href="edit.php?edit=<?=$employees['id']?>" class="btn btn-warning">Edit</a>

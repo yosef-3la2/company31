@@ -68,6 +68,28 @@ require_once 'C:xampp/htdocs/company/app/functions.php';
                     >List Department</a
                   >
                 </li>
+              </ul>            
+              <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Category
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="<?=URL('categories/add.php')?>"
+                    >Add Category</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="<?=URL('categories/list.php')?>"
+                    >List Category</a
+                  >
+                </li>
               </ul>
             </li>
           </ul>
