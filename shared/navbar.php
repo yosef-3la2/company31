@@ -91,6 +91,28 @@ require_once 'C:xampp/htdocs/company/app/functions.php';
                   >
                 </li>
               </ul>
+              <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Product
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="<?=URL('products/add.php')?>"
+                    >Add Product</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="<?=URL('products/list.php')?>"
+                    >List Product</a
+                  >
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
