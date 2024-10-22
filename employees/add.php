@@ -1,23 +1,55 @@
 <?php
 require_once 'C:xampp/htdocs/company/app/configDB.php';
+require_once 'C:xampp/htdocs/company/app/functions.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
 
 $departmentquery="SELECT * FROM `departments`";
 $departments=mysqli_query($con,$departmentquery);
-
+$errors=[];
 $message='';
 if(isset($_POST['submit'])){
-$name=$_POST['name'];
-$email=$_POST['email'];
+$name=filterstring($_POST['name']);
+$email=filterstring($_POST['email']);
 $department_id=$_POST['department_id'];
-$address=$_POST['address'];
-$phone=$_POST['phone'];
-$password=$_POST['password'];
-$insertquery="INSERT INTO `employees` values(Null,'$name','$email','$department_id','$address','$phone','$password')";
+$address=filterstring($_POST['address']);
+$phone=filterstring($_POST['phone']);
+$password=sha1($_POST['password']);
+
+if(stringvalidation($name,4)){
+  $errors[]="Employee name must be more than 4 characters";
+}
+
+if(stringvalidation($email,0)){
+  $errors[]="Employee must enter an email";
+}
+
+if(stringvalidation($address,10)){
+  $errors[]="Employee must enter an address";
+}
+
+if(stringvalidation($phone,11)){
+  $errors[]="phone must be more than 10 digits";
+}
+
+$realname=$_FILES['image']['name'];
+$iamgesize=$_FILES['image']['size'];
+$imgname="company31.com_".rand(0,30000)."_".time()."_".$realname;
+$tmpname=$_FILES['image']['tmp_name'];
+$location='uploads/'.$imgname;
+move_uploaded_file($tmpname,$location);
+if(imagevalidation($realname,$iamgesize,5 )){
+  $errors[]="Employee must enter an image and size must be less than 5 mb";
+}
+
+
+if(empty($errors)){
+  
+$insertquery="INSERT INTO `employees` values(Null,'$name','$email','$department_id','$address','$phone','$password','$imgname')";
 $insert=mysqli_query($con,$insertquery);
 if($insert){
     $message='Employee added successfully';
+}
 }
 }
 
@@ -34,8 +66,17 @@ if($insert){
             <p class="fs-4 mb-0"><?=$message ?></p>
           </div>
           <?php endif;?>
+        <?php if(!empty($errors)):?>
+          <div class="alert alert-danger">
+          <ul>
+            <?php foreach($errors as $error): ?>
+              <li><?=$error?></li>
+            <?php endforeach;?>
+          </ul>
+        </div>
+          <?php endif;?>
           <!-- End of Event -->
-          <form method="POST">
+          <form method="POST" enctype="multipart/form-data">
             <div class="row">
               <div class="form-group col-md-6 mb-2">
                 <label for="name" class="form-label"> Name </label>
@@ -89,6 +130,16 @@ if($insert){
                   <?php endforeach;?>
                 </select>
               </div>
+            
+                <div class="form-group col-12 mb-2">
+                <label for="image" class="form-label"> Employee Image </label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="image"
+                  name="image">
+                </div>
+            
               <div class="col-12 text-center">
                 <button class="btn btn-primary" name="submit">
                   Add Employee

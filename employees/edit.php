@@ -12,6 +12,7 @@ $department_id='';
 $address='';
 $phone='';
 $password='';
+$errors=[];
 
 if(isset($_GET['edit'])){
     $id=$_GET['edit'];
@@ -25,18 +26,51 @@ if(isset($_GET['edit'])){
     $phone=$row['phone'];
     $password=$row['password'];
     if(isset($_POST['update'])){
-        $name=$_POST['name'];
-        $email=$_POST['email'];
+        $name=filterstring($_POST['name']);
+        $email=filterstring($_POST['email']);
         $department_id=$_POST['department_id'];
-        $address=$_POST['address'];
-        $phone=$_POST['phone'];
+        $address=filterstring($_POST['address']);
+        $phone=filterstring($_POST['phone']);
         $password=$_POST['password'];
-        $updatequery="UPDATE `employees` SET `name`='$name',`email`='$email',`department_id`=$department_id ,`address`='$address', phone='$phone',`password`= '$password' WHERE id=$id";
-        $update=mysqli_query($con,$updatequery);
-        if($update){
-            path('employees/list.php');
-          }       
-    }
+
+        if(stringvalidation($name,4)){
+          $errors[]="Employee name must be more than 4 characters";
+        }
+        
+        if(stringvalidation($email,0)){
+          $errors[]="Employee must enter an email";
+        }
+        
+        if(stringvalidation($address,10)){
+          $errors[]="Employee must enter an address";
+        }
+        
+        if(stringvalidation($phone,11)){
+          $errors[]="phone must be more than 10 digits";
+        }
+
+          $realname=$_FILES['image']['name'];
+          $imagesize=$_FILES['image']['size'];
+          $imgname="company31.com_".rand(0,30000)."_".time()."_".$realname;
+          $tmpname=$_FILES['image']['tmp_name'];
+          $location='uploads/'.$imgname;
+          $oldimage='uploads/'.$row['image'];
+          if($row['image']!='fake.webp') 
+          {
+          unlink($oldimage);
+          }
+          move_uploaded_file($tmpname,$location);
+          if(imagevalidation($realname,$iamgesize,5)){
+            $errors[]="Employee must enter an image and size must be less than 5 mb";
+          }
+          if(empty($errors)){
+            $updatequery="UPDATE `employees` SET `name`='$name',`email`='$email',`department_id`=$department_id ,`address`='$address', phone='$phone',`password`= '$password',`image`='$imgname' WHERE id=$id";
+            $update=mysqli_query($con,$updatequery);
+            if($update){
+                path('employees/list.php');
+              }  
+            }
+       }
 
 
 }
@@ -49,7 +83,16 @@ if(isset($_GET['edit'])){
       <h2 class="text-center text-light">Add New Employee</h2>
       <div class="card border-0">
         <div class="card-body bg-dark text-light">
-          <form method="POST">
+        <?php if(!empty($errors)):?>
+          <div class="alert alert-danger">
+          <ul>
+            <?php foreach($errors as $error): ?>
+              <li><?=$error?></li>
+            <?php endforeach;?>
+          </ul>
+        </div>
+          <?php endif;?>
+          <form method="POST" enctype="multipart/form-data">
             <div class="row">
               <div class="form-group col-md-6 mb-2">
                 <label for="name" class="form-label"> Name </label>
@@ -111,6 +154,16 @@ if(isset($_GET['edit'])){
                   <?php endforeach;?>
                 </select>
               </div>
+                <div class="form-group col-12 mb-2">
+                <label for="image" class="form-label"> Employee Image </label>
+                <input
+                  type="file"
+                  class="form-control mb-1"
+                  id="image"
+                  name="image">
+                  <img width="150" src="uploads/<?= $row['image']?>" alt="">
+                </div>
+            
               <div class="col-12 text-center">
                 <button class="btn btn-warning" name="update">
                   Update Employee

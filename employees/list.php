@@ -6,9 +6,15 @@ require_once '../shared/navbar.php';
 
 if(isset($_GET['delete'])){
     $id=$_GET['delete'];
+    $select="SELECT `image` FROM employees where id=$id";
+    $selectone=mysqli_query($con,$select);
+    $image=mysqli_fetch_assoc($selectone);
+    $location="uploads/".$image['image'];
     $deletequery="DELETE FROM `employees` where id=$id";
     $delete=mysqli_query($con,$deletequery);
     if($delete){
+      if($image['image']!="fake.webp"){
+        unlink($location);}
         path('employees/list.php');
     }
 }

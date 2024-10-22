@@ -29,8 +29,10 @@ if(isset($_GET['show'])){
     <div class="container col-6 pt-5">
       <h2 class="text-center text-light">Employee: <?=$row['name']?></h2>
       <div class="card border-0 mx-auto" style="width: 300px;" >
-      <img src="https://static.vecteezy.com/system/resources/previews/020/120/848/original/user-icon-fake-photo-sign-profile-button-simple-style-social-media-poster-background-symbol-user-brand-logo-design-element-user-t-shirt-printing-for-sticker-free-vector.jpg " alt="" class="img-fluid">
-        <div class="card-body bg-dark text-light">
+       
+        <img src="uploads/<?=$row['image']?>" alt="" class="img-fluid">
+       
+      <div class="card-body bg-dark text-light">
             <div class="card-title"></div>
             <p>Email: <?=$row['email']?></p>
             <p>department: <?=$row['department']?></p>

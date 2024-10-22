@@ -1,5 +1,7 @@
 <?php
 require_once 'C:xampp/htdocs/company/app/functions.php';
+
+session_start();
 ?>
   
 
