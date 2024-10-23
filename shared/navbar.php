@@ -21,6 +21,8 @@ if(isset($_POST['logout'])){
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="<?=URL('')?>">Home</a>
                     </li>
+                    <?php if(isset($_SESSION['employee'])): ?>
+                        <?php if($_SESSION['employee']['role']==1 || $_SESSION['employee']['role']==2):?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -61,6 +63,7 @@ if(isset($_POST['logout'])){
                                 <a class="dropdown-item" href="<?=URL('categories/list.php')?>">List Category</a>
                             </li>
                         </ul>
+                    <?php endif;?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -74,7 +77,6 @@ if(isset($_POST['logout'])){
                                 <a class="dropdown-item" href="<?=URL('products/list.php')?>">List Product</a>
                             </li>
                         </ul>
-                        <?php if(isset($_SESSION['employee'])): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -84,8 +86,8 @@ if(isset($_POST['logout'])){
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <form class="dropdown-menu" method="post">
-                                    <button name="logout" class="btn text-danger">log out</button name="logout">
+                                <form class="dropdown-item" method="POST">
+                                    <button name="logout" class="btn text-danger">log out</button>
                                 </form>
                             </li>
                         </ul>

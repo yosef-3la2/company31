@@ -3,6 +3,7 @@ require_once 'C:xampp/htdocs/company/app/configDB.php';
 require_once 'C:xampp/htdocs/company/app/functions.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
+auth(2);
 
 $department='';
 if(isset($_GET['edit'])){

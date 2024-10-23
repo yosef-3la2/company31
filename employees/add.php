@@ -15,6 +15,7 @@ $department_id=$_POST['department_id'];
 $address=filterstring($_POST['address']);
 $phone=filterstring($_POST['phone']);
 $password=sha1($_POST['password']);
+$role=$_POST['role'];
 
 if(stringvalidation($name,4)){
   $errors[]="Employee name must be more than 4 characters";
@@ -45,7 +46,7 @@ if(imagevalidation($realname,$iamgesize,5 )){
 
 if(empty($errors)){
   
-$insertquery="INSERT INTO `employees` values(Null,'$name','$email','$department_id','$address','$phone','$password','$imgname')";
+$insertquery="INSERT INTO `employees` values(Null,'$name','$email','$department_id','$address','$phone','$password','$imgname',$role)";
 $insert=mysqli_query($con,$insertquery);
 if($insert){
     $message='Employee added successfully';
@@ -128,6 +129,19 @@ if($insert){
                 <?php foreach($departments as $department): ?>
                   <option value="<?= $department['id']?>"><?= $department['department']?></option>>
                   <?php endforeach;?>
+                </select>
+              </div>
+              <div class="form-group col-md-6 mb-2">
+                <label for="role" class="form-label"> Role </label>
+                <select
+                  name="role"
+                  id="role"
+                  class="form-select"
+                >
+                  <option value="1">Super admin</option>>
+                  <option value="2">Admin</option>>
+                  <option value="3">employee</option>>
+                 
                 </select>
               </div>
             

@@ -19,7 +19,8 @@ if(isset($_POST['signin'])){
           'image' => $emp['image'],
           'phone' => $emp['phone'],
           'address' => $emp['address'],
-          'department_id' => $emp['department_id']
+          'department_id' => $emp['department_id'],
+          'role' => $emp['role']
         ];
         path('');
     }else{

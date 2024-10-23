@@ -50,5 +50,19 @@ function imagevalidation($imagename,$imagesize,$limitsize)
         return false;
     }
 }
-?>
 
+
+function auth($role2=null,$role3=null){
+    if(isset($_SESSION['employee'])){
+    if($_SESSION['employee']['role']==1 || $_SESSION['employee']['role']==$role2 || $_SESSION['employee']['role']==$role3 ){
+        return true;
+        
+    }else{
+        path('403.php');
+    }
+        }
+        else{
+            path('401.php');
+            }
+}
+?>

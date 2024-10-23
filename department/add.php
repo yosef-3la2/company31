@@ -2,7 +2,7 @@
 require_once 'C:xampp/htdocs/company/app/configDB.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
-
+auth(2);
 $message='';
 if(isset($_POST['department'])){
     $department=$_POST['department'];

@@ -68,8 +68,10 @@ $numofrows=mysqli_num_rows($select);
                 <td><?= $product['price']?></td>
                 <td><a class="text-reset" href="product_categories.php?category_id=<?= $product['cat_id'] ?>&category=<?=$product['category']?>"><?=$product['category']?></a></td>
                 <td>
-                  <a href="edit.php?edit=<?=$product['id']?>" class="btn btn-warning">Edit</a>
+                  <?php if($_SESSION['employee']['role']==1 || $_SESSION['employee']['role']==2):?>
+                    <a href="edit.php?edit=<?=$product['id']?>" class="btn btn-warning">Edit</a> 
                   <a href="?delete=<?=$product['id']?>" name="delete" class="btn btn-danger">Delete</a>
+                  <?php endif;?>
                 </td> 
               </tr>
             <?php endforeach;?>

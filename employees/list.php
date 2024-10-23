@@ -3,7 +3,7 @@ require_once 'C:xampp/htdocs/company/app/configDB.php';
 require_once 'C:xampp/htdocs/company/app/functions.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
-
+auth(2);
 if(isset($_GET['delete'])){
     $id=$_GET['delete'];
     $select="SELECT `image` FROM employees where id=$id";
@@ -53,9 +53,14 @@ $numofrows=mysqli_num_rows($select);
                 <td><?= $employees['department']?></td>
                 <td>
                   <a href="show.php?show=<?=$employees['id']?>" class="btn btn-info">Show</a>
+                  <?php if($_SESSION['employee']['role']==1):?>
                   <a href="edit.php?edit=<?=$employees['id']?>" class="btn btn-warning">Edit</a>
                   <a href="?delete=<?=$employees['id']?>" name="delete" class="btn btn-danger">Delete</a>
+                  <?php else:?>
+                  <a class="btn btn-warning disabled">Edit</a>
+                  <a class="btn btn-danger disabled">Delete</a>
                 </td>
+                <?php endif;?>
                 <?php endforeach;?>
             <?php else: ?>
               <tr>
