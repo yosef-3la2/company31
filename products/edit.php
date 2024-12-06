@@ -59,7 +59,7 @@ if(isset($_GET['edit'])){
 
 
     if(empty($errors)){
-      $updatequery="UPDATE products set title='$title',`description`='$description',price=$price,category_id=$category_id,   `image`='$imgname' where id=$id";
+      $updatequery="UPDATE products set title='$title',`description`='$description',price=$price,category_id=$category_id,`image`='$imgname' where id=$id";
       $update=mysqli_query($con,$updatequery);
       if($update){
         path('products/list.php');
