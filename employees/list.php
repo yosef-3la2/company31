@@ -1,31 +1,32 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
-require_once 'C:xampp/htdocs/company/app/functions.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/functions.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
-auth(2);
+
 if(isset($_GET['delete'])){
     $id=$_GET['delete'];
-    $select="SELECT `image` FROM employees where id=$id";
-    $selectone=mysqli_query($con,$select);
-    $image=mysqli_fetch_assoc($selectone);
+    $select="SELECT image FROM employees where id= :id";
+    $img = $pdo->prepare($select);
+    $img->execute([':id' => $id]);
+    $image = $img->fetch(PDO::FETCH_ASSOC);
+
     $location="uploads/".$image['image'];
-    $deletequery="DELETE FROM `employees` where id=$id";
-    $delete=mysqli_query($con,$deletequery);
-    if($delete){
-      if($image['image']!="fake.webp"){
-        unlink($location);}
+    $deletequery="DELETE FROM employees where id=$id";
+    $emp_delete=$pdo->prepare($deletequery);
+    $emp_delete->execute();
+    if($emp_delete){
         path('employees/list.php');
     }
 }
 
-$selectquery="SELECT * from `employeeswithdepartments`;";
-$select=mysqli_query($con,$selectquery);
-$numofrows=mysqli_num_rows($select);
+$selectquery="SELECT * from employees_departments_view  ";
+$select=$pdo->prepare($selectquery);
+$select->execute();
 ?>
 
     <div class="container pt-5">
-      <h2 class="text-center text-light">List All Employees:<?=$numofrows?></h2>
+      <h2 class="text-center text-light">List All Employees:</h2>
       <div class="card border-0">
         <div class="card-body bg-dark text-light">
           <table class="table table-dark">
@@ -42,7 +43,6 @@ $numofrows=mysqli_num_rows($select);
             </thead>
             <tbody>
               <!-- start of row -->
-               <?php if($numofrows>0):?>
                <?php foreach($select as $index => $employees ):?>
               <tr>
                 <td><?= $index+1 ?></td>
@@ -53,26 +53,16 @@ $numofrows=mysqli_num_rows($select);
                 <td><?= $employees['department']?></td>
                 <td>
                   <a href="show.php?show=<?=$employees['id']?>" class="btn btn-info">Show</a>
-                  <?php if($_SESSION['employee']['role']==1):?>
                   <a href="edit.php?edit=<?=$employees['id']?>" class="btn btn-warning">Edit</a>
                   <a href="?delete=<?=$employees['id']?>" name="delete" class="btn btn-danger">Delete</a>
-                  <?php else:?>
-                  <a class="btn btn-warning disabled">Edit</a>
-                  <a class="btn btn-danger disabled">Delete</a>
                 </td>
-                <?php endif;?>
+                </tr>
                 <?php endforeach;?>
-            <?php else: ?>
-              <tr>
-                <td colspan="3" class="text-center">No data to show</td>
-              </tr>
-            <?php endif;?>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-
 
 <?php
 require_once '../shared/footer.php';

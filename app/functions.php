@@ -1,6 +1,6 @@
 <?php
 
-define('BASE_URL','http://localhost/company/');
+define('BASE_URL','http://localhost/db-project/');
 
 function URL($var=NULL)
 {

@@ -1,16 +1,17 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
-auth(2);
+
 $message='';
 if(isset($_POST['department'])){
     $department=$_POST['department'];
-    $insertquery="INSERT INTO `departments` VALUES(NULL,'$department')";
-    $insert=mysqli_query($con,$insertquery);
-if($insert){
-    $message='Added Successfully';
-}
+    $insertquery="INSERT INTO departments(department) VALUES('$department')";
+    $insert=$pdo->prepare($insertquery);
+    $insert->execute();
+    if($insert){
+        $message='Added Successfully';
+    }
 }
 
 ?>

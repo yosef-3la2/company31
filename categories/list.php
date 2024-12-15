@@ -1,25 +1,30 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
 
 if(isset($_GET['delete']))
 {
     $id=$_GET['delete'];
-    $deletequery="DELETE FROM `categories` WHERE id=$id";
-    $delete=mysqli_query($con,$deletequery);
-    if($delete){
+    $delete_product_query="DELETE FROM products WHERE category_id=$id";
+    $product_delete=$pdo->prepare($delete_product_query);
+    $product_delete->execute();
+
+    $id=$_GET['delete'];
+    $delete_cat_query="DELETE FROM categories WHERE id=$id";
+    $cat_delete=$pdo->prepare($delete_cat_query);
+    $cat_delete->execute();
+    
+    if($cat_delete && $product_delete){
         path('categories/list.php');
     }
 }
 
 
 
-$selectquery="SELECT * FROM `categories` ";
-$select=mysqli_query($con,$selectquery);
-
-
-$numofrows=mysqli_num_rows($select);
+$selectquery="SELECT * FROM categories ";
+$select=$pdo->prepare($selectquery);
+$select->execute();
 ?>
 
 
@@ -39,7 +44,7 @@ $numofrows=mysqli_num_rows($select);
             </thead>
             <tbody>
               <!-- start of row -->
-            <?php if ( $numofrows> 0) :?>
+            
             <?php foreach($select as $index => $category): ?>
               <tr>
                 <td><?= $index + 1 ?></td>
@@ -50,11 +55,6 @@ $numofrows=mysqli_num_rows($select);
                 </td> 
               </tr>
             <?php endforeach;?>
-            <?php else: ?>
-              <tr>
-                <td colspan="3" class="text-center">No data to show</td>
-              </tr>
-            <?php endif;?>
             </tbody>
           </table>
         </div>

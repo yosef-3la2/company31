@@ -1,13 +1,15 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
-require_once 'C:xampp/htdocs/company/app/functions.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/functions.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
 
-$departmentquery="SELECT * FROM `departments`";
-$departments=mysqli_query($con,$departmentquery);
+$departmentquery="SELECT * FROM departments";
+$departments=$pdo->prepare($departmentquery);
+$departments->execute();
 $errors=[];
 $message='';
+$imgname='fake.webp';
 if(isset($_POST['submit'])){
 $name=filterstring($_POST['name']);
 $email=filterstring($_POST['email']);
@@ -15,7 +17,7 @@ $department_id=$_POST['department_id'];
 $address=filterstring($_POST['address']);
 $phone=filterstring($_POST['phone']);
 $password=sha1($_POST['password']);
-$role=$_POST['role'];
+
 
 if(stringvalidation($name,4)){
   $errors[]="Employee name must be more than 4 characters";
@@ -33,21 +35,24 @@ if(stringvalidation($phone,11)){
   $errors[]="phone must be more than 10 digits";
 }
 
+
+if(!empty($_FILES['image']['name'])){
 $realname=$_FILES['image']['name'];
-$iamgesize=$_FILES['image']['size'];
-$imgname="company31.com_".rand(0,30000)."_".time()."_".$realname;
+$imgname="db-project31.com_".rand(0,30000)."_".time()."_".$realname;
 $tmpname=$_FILES['image']['tmp_name'];
 $location='uploads/'.$imgname;
 move_uploaded_file($tmpname,$location);
-if(imagevalidation($realname,$iamgesize,5 )){
-  $errors[]="Employee must enter an image and size must be less than 5 mb";
+}else{
+  $imgname='fake.webp';
 }
 
 
+
+
 if(empty($errors)){
-  
-$insertquery="INSERT INTO `employees` values(Null,'$name','$email','$department_id','$address','$phone','$password','$imgname',$role)";
-$insert=mysqli_query($con,$insertquery);
+$insertquery="INSERT INTO employees(name,email,department_id,address,phone,password,image) values('$name','$email',$department_id,'$address','$phone','$password','$imgname')";
+$insert=$pdo->prepare($insertquery);
+$insert->execute();
 if($insert){
     $message='Employee added successfully';
 }
@@ -131,20 +136,7 @@ if($insert){
                   <?php endforeach;?>
                 </select>
               </div>
-              <div class="form-group col-md-6 mb-2">
-                <label for="role" class="form-label"> Role </label>
-                <select
-                  name="role"
-                  id="role"
-                  class="form-select"
-                >
-                  <option value="1">Super admin</option>>
-                  <option value="2">Admin</option>>
-                  <option value="3">employee</option>>
-                 
-                </select>
-              </div>
-            
+             
                 <div class="form-group col-12 mb-2">
                 <label for="image" class="form-label"> Employee Image </label>
                 <input

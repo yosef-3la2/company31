@@ -1,26 +1,27 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
 
-$departmentquery="SELECT * FROM `departments`";
-$departments=mysqli_query($con,$departmentquery);
+$departmentquery="SELECT * FROM departments";
+$departments=$pdo->prepare($departmentquery);
+$departments->execute();
 
 
 if(isset($_GET['show'])){
     $id=$_GET['show'];
-    $selectemployee="SELECT * from `employeeswithdepartments` WHERE id=$id";
-    $selectone=mysqli_query($con,$selectemployee);
-    $row=mysqli_fetch_assoc($selectone);
+    $selectemployee="SELECT * from employees_departments_view WHERE id=$id";
+    $emps=$pdo->prepare($selectemployee);
+    $emps->execute();
+    
+    $row = $emps->fetch(PDO::FETCH_ASSOC);
     $name=$row['name'];
     $email=$row['email'];
     $department=$row['department'];
     $address=$row['address'];
     $phone=$row['phone'];
-    $password=$row['password'];
 
-
-}
+  }
 
 
 ?>
@@ -30,7 +31,7 @@ if(isset($_GET['show'])){
       <h2 class="text-center text-light">Employee: <?=$row['name']?></h2>
       <div class="card border-0 mx-auto" style="width: 300px;" >
        
-        <img src="uploads/<?=$row['image']?>" alt="" class="img-fluid">
+      <img src="uploads/<?=$row['image']?>" alt="" class="img-fluid">
        
       <div class="card-body bg-dark text-light">
             <div class="card-title"></div>
@@ -41,6 +42,7 @@ if(isset($_GET['show'])){
         </div>
       </div>
     </div>
+
 
 <?php
 require_once '../shared/footer.php';

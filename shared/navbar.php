@@ -1,16 +1,9 @@
-<?php
-require_once 'C:xampp/htdocs/company/app/functions.php';
 
-if(isset($_POST['logout'])){
-    session_unset();
-    path('login.php');
-}
-?>
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container">
-            <a class="navbar-brand" href="<?=URL('')?>">Company</a>
+            <a class="navbar-brand" href="<?=URL('')?>">db-project</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -21,9 +14,7 @@ if(isset($_POST['logout'])){
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="<?=URL('')?>">Home</a>
                     </li>
-                    <?php if(isset($_SESSION['employee'])): ?>
-                        <?php if($_SESSION['employee']['role']==1 || $_SESSION['employee']['role']==2):?>
-                    <li class="nav-item dropdown">
+                        <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Employees
@@ -37,6 +28,7 @@ if(isset($_POST['logout'])){
                             </li>
                         </ul>
                     </li>
+                        
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -63,7 +55,7 @@ if(isset($_POST['logout'])){
                                 <a class="dropdown-item" href="<?=URL('categories/list.php')?>">List Category</a>
                             </li>
                         </ul>
-                    <?php endif;?>
+                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -77,26 +69,24 @@ if(isset($_POST['logout'])){
                                 <a class="dropdown-item" href="<?=URL('products/list.php')?>">List Product</a>
                             </li>
                         </ul>
-                    <li class="nav-item dropdown">
+                        <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            <img width="25" src="<?= URL('employees/uploads/').$_SESSION['employee']['image']?>"
-                                class="rounded-circle">
-                            <?= $_SESSION['employee']['name'] ?>
+                            Customers
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <form class="dropdown-item" method="POST">
-                                    <button name="logout" class="btn text-danger">log out</button>
-                                </form>
+                                <a class="dropdown-item" href="<?=URL('customers/add.php')?>">Add Customer</a>
                             </li>
+                            <li>
+                                <a class="dropdown-item" href="<?=URL('customers/list.php')?>">List Customer</a>
+                            </li>
+                            
                         </ul>
                     </li>
-                    <?php else:?>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?=URL('login.php')?>">login</a>
-                    </li>
-                    <?php endif;?>
+                        
+                    
+                    
                 </ul>
             </div>
         </div>

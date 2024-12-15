@@ -1,14 +1,18 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
-require_once 'C:xampp/htdocs/company/app/functions.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/functions.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
 
-$categoriesquery="SELECT * FROM `categories`";
-$category=mysqli_query($con,$categoriesquery);
+$categoriesquery="SELECT * FROM categories";
+$category=$pdo->prepare($categoriesquery);
+$category->execute();
 
 $message='';
 $errors=[];
+
+
+
 if(isset($_POST['submit'])){
     $title=filterstring($_POST['title']);
     $description=filterstring($_POST['description']);
@@ -22,22 +26,24 @@ if(isset($_POST['submit'])){
     if(stringvalidation($description,10)){
       $errors[]="product description must be atleast 10 characters ";
     }
-
-    $realname=$_FILES['image']['name'];
-    $tmpname=$_FILES['image']['tmp_name'];
-    $imgname=rand(0,100000).time().$realname;
-    $imgsize=$_FILES['image']['size'];
-    $location='uploads/'.$imgname;
-
-    if(imagevalidation($realname,$imgsize,5)){
-      $errors[]="product image is required and must be less than 5 mb";
+    if(!empty($_FILES['image']['name'])){
+        $realname=$_FILES['image']['name'];
+        $tmpname=$_FILES['image']['tmp_name'];
+        $imgname=rand(0,100000).time().$realname;
+        $imgsize=$_FILES['image']['size'];
+        $location='uploads/'.$imgname;
+        move_uploaded_file($tmpname,$location); 
+    }else{
+        $imgname='product-placeholder.jpeg';
     }
 
 
+
+
     if(empty($errors)){
-      move_uploaded_file($tmpname,$location); 
-      $insertquery="INSERT INTO `products` VALUES(NULL,'$title','$description',$price,$category_id,'$imgname')";
-      $insert=mysqli_query($con,$insertquery);
+      $insertquery="INSERT INTO products(title,description,price,category_id,image) VALUES('$title','$description',$price,$category_id,'$imgname')";
+      $insert=$pdo->prepare($insertquery);
+      $insert->execute();
       if($insert){
           $message='Added Successfully';
         }

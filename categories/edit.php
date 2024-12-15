@@ -1,20 +1,21 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
-require_once 'C:xampp/htdocs/company/app/functions.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/functions.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
 
 $category='';
 if(isset($_GET['edit'])){
   $id=$_GET['edit'];
-  $select="SELECT * FROM `categories` where id= $id";
-  $selectone=mysqli_query($con,$select);
-  $row=mysqli_fetch_assoc($selectone);
+  $selectquery="SELECT * FROM categories where id= $id";
+  $cats = $pdo->query($selectquery);
+  $row = $cats->fetch(PDO::FETCH_ASSOC);
   $category=$row['category'];
   if(isset($_POST['category'])){
     $category=$_POST['category'];
     $updatequery="UPDATE categories set category='$category' where id=$id";
-    $update=mysqli_query($con,$updatequery);
+    $update=$pdo->prepare($updatequery);
+    $update->execute(); 
     if($update){
       path('categories/list.php');
     }

@@ -1,11 +1,12 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
-require_once 'C:xampp/htdocs/company/app/functions.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/functions.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
 
-$categoriesquery="SELECT * FROM `categories`";
-$category=mysqli_query($con,$categoriesquery);
+$categoriesquery="SELECT * FROM categories";
+$category=$pdo->prepare($categoriesquery);
+$category->execute();
 
 $title='';
 $description='';
@@ -15,9 +16,9 @@ $image='';
 $errors=[];
 if(isset($_GET['edit'])){
   $id=$_GET['edit'];
-  $select="SELECT * FROM products where id=$id";
-  $selectone=mysqli_query($con,$select);
-  $row=mysqli_fetch_assoc($selectone);
+  $selectquery="SELECT * FROM products where id=$id";
+  $cats = $pdo->query($selectquery);
+  $row = $cats->fetch(PDO::FETCH_ASSOC);
   $title=$row['title'];
   $description=$row['description'];
   $price=$row['price'];
@@ -36,31 +37,27 @@ if(isset($_GET['edit'])){
     if(stringvalidation($description,10)){
       $errors[]="product description must be atleast 10 characters ";
     }
-    if(!empty($_FILES['image']['name'])){
-    $realname=$_FILES['image']['name'];
-    $tmpname=$_FILES['image']['tmp_name'];
-    $imgname=rand(0,100000).time().$realname;
-    $imgsize=$_FILES['image']['size'];
-    $location='uploads/'.$imgname;
-    if(imagevalidation($realname,$imgsize,5)){
-      $errors[]="product image is required and must be less than 5 mb";
-    }
-    if(empty($errors)){
-    move_uploaded_file($tmpname,$location);
-    if($row['image']!='placeholder.png'){
-      $oldimage='uploads/'.$row['image'];
-      unlink($oldimage);
-    }
-    }
-    }else{
-      $imgname=$row['image'];
-    } 
+
+
+    if ($_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
+           
+      $imgname = $row['image'];
+      } else {
+        $realname=$_FILES['image']['name'];
+        $tmpname=$_FILES['image']['tmp_name'];
+        $imgname=rand(0,100000).time().$realname;
+        $imgsize=$_FILES['image']['size'];
+        $location='uploads/'.$imgname;
+        move_uploaded_file($tmpname,$location);
+
+      }
 
 
 
     if(empty($errors)){
-      $updatequery="UPDATE products set title='$title',`description`='$description',price=$price,category_id=$category_id,`image`='$imgname' where id=$id";
-      $update=mysqli_query($con,$updatequery);
+      $updatequery="UPDATE products set title='$title',description='$description',price=$price,category_id=$category_id,image='$imgname' where id=$id";
+      $update=$pdo->prepare($updatequery);
+      $update->execute(); 
       if($update){
         path('products/list.php');
       }

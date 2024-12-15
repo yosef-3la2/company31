@@ -1,26 +1,32 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
-auth(2);
+
 
 if(isset($_GET['delete']))
 {
-    $id=$_GET['delete'];
-    $deletequery="DELETE FROM `departments` WHERE id=$id";
-    $delete=mysqli_query($con,$deletequery);
-    if($delete){
-        path('department/list.php');
-    }
+  $id=$_GET['delete'];
+
+  $delete_emp_query="DELETE FROM employees WHERE department_id=$id";
+  $emp_delete=$pdo->prepare($delete_emp_query);
+  $emp_delete->execute();
+
+  $id=$_GET['delete'];
+  $delete_dep_query="DELETE FROM departments WHERE id=$id";
+  $dep_delete=$pdo->prepare($delete_dep_query);
+  $dep_delete->execute();
+  
+  if($dep_delete && $emp_delete){
+      path('department/list.php');
+  }
 }
 
 
 
-$selectquery="SELECT * FROM `departments` ";
-$select=mysqli_query($con,$selectquery);
-
-
-$numofrows=mysqli_num_rows($select);
+$selectquery="SELECT * FROM departments;";
+$select=$pdo->prepare($selectquery);
+$select->execute();
 ?>
 
 
@@ -39,8 +45,7 @@ $numofrows=mysqli_num_rows($select);
               </tr>
             </thead>
             <tbody>
-              <!-- start of row -->
-            <?php if ( $numofrows> 0) :?>
+             
             <?php foreach($select as $index => $department): ?>
               <tr>
                 <td><?= $index + 1 ?></td>
@@ -51,11 +56,7 @@ $numofrows=mysqli_num_rows($select);
                 </td>
               </tr>
             <?php endforeach;?>
-            <?php else: ?>
-              <tr>
-                <td colspan="3" class="text-center">No data to show</td>
-              </tr>
-            <?php endif;?>
+            
             </tbody>
           </table>
         </div>

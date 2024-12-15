@@ -1,10 +1,11 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
 
-$departmentquery="SELECT * FROM `departments`";
-$departments=mysqli_query($con,$departmentquery);
+$departmentquery="SELECT * FROM departments";
+$departments=$pdo->prepare($departmentquery);
+$departments->execute();
 
 $name='';
 $email='';
@@ -13,12 +14,15 @@ $address='';
 $phone='';
 $password='';
 $errors=[];
+$oldimage='';
 
 if(isset($_GET['edit'])){
     $id=$_GET['edit'];
-    $selectemployee="SELECT * FROM `employees` WHERE id=$id";
-    $selectone=mysqli_query($con,$selectemployee);
-    $row=mysqli_fetch_assoc($selectone);
+    $selectemployee = "SELECT * FROM employees WHERE id = $id";
+    $emp = $pdo->prepare($selectemployee);
+    $emp->execute();
+    $row = $emp->fetch(PDO::FETCH_ASSOC);
+
     $name=$row['name'];
     $email=$row['email'];
     $department_id=$row['department_id'];
@@ -49,32 +53,31 @@ if(isset($_GET['edit'])){
           $errors[]="phone must be more than 10 digits";
         }
 
+        if ($_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
+           
+          $imgname = $row['image'];
+          } else {
           $realname=$_FILES['image']['name'];
           $imagesize=$_FILES['image']['size'];
-          $imgname="company31.com_".rand(0,30000)."_".time()."_".$realname;
+          $imgname="db-project31.com_".rand(0,30000)."_".time()."_".$realname;
           $tmpname=$_FILES['image']['tmp_name'];
           $location='uploads/'.$imgname;
-          $oldimage='uploads/'.$row['image'];
-          if($row['image']!='fake.webp') 
-          {
-          unlink($oldimage);
-          }
+          
+          
           move_uploaded_file($tmpname,$location);
-          if(imagevalidation($realname,$iamgesize,5)){
-            $errors[]="Employee must enter an image and size must be less than 5 mb";
-          }
+
+        }
           if(empty($errors)){
-            $updatequery="UPDATE `employees` SET `name`='$name',`email`='$email',`department_id`=$department_id ,`address`='$address', phone='$phone',`password`= '$password',`image`='$imgname' WHERE id=$id";
-            $update=mysqli_query($con,$updatequery);
+            $updatequery="UPDATE employees SET name='$name',email='$email',department_id=$department_id ,address='$address', phone='$phone',password= '$password',image='$imgname' WHERE id=$id";
+            $update=$pdo->prepare($updatequery);
+            $update->execute(); 
             if($update){
                 path('employees/list.php');
               }  
             }
-       }
+       }}
 
-
-}
-
+       
 
 ?>
 

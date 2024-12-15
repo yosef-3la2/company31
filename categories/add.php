@@ -1,13 +1,14 @@
 <?php
-require_once 'C:xampp/htdocs/company/app/configDB.php';
+require_once 'C:xampp/htdocs/db-project/app/configDB.php';
 require_once '../shared/header.php';
 require_once '../shared/navbar.php';
 
 $message='';
 if(isset($_POST['category'])){
     $category=$_POST['category'];
-    $insertquery="INSERT INTO `categories` VALUES(NULL,'$category')";
-    $insert=mysqli_query($con,$insertquery);
+    $insertquery="INSERT INTO categories(category) VALUES('$category')";
+    $insert=$pdo->prepare($insertquery);
+    $insert->execute();
 if($insert){
     $message='Added Successfully';
 }
