@@ -8,7 +8,7 @@
 // }
 
 try {
-    $dsn = "sqlsrv:Server=localhost;Database=db-project";
+    $dsn = "sqlsrv:Server=localhost;Database=test-db-project";
     $username = "";
     $password = "";
     $options = array(

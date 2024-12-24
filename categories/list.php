@@ -5,19 +5,23 @@ require_once '../shared/navbar.php';
 
 if(isset($_GET['delete']))
 {
-    $id=$_GET['delete'];
-    $delete_product_query="DELETE FROM products WHERE category_id=$id";
-    $product_delete=$pdo->prepare($delete_product_query);
-    $product_delete->execute();
+    // $id=$_GET['delete'];
+    // $delete_product_query="DELETE FROM products WHERE category_id=$id";
+    // $product_delete=$pdo->prepare($delete_product_query);
+    // $product_delete->execute();
 
     $id=$_GET['delete'];
     $delete_cat_query="DELETE FROM categories WHERE id=$id";
     $cat_delete=$pdo->prepare($delete_cat_query);
     $cat_delete->execute();
     
-    if($cat_delete && $product_delete){
+    if($cat_delete ){
         path('categories/list.php');
     }
+    
+    // if($cat_delete && $product_delete){
+    //     path('categories/list.php');
+    // }
 }
 
 

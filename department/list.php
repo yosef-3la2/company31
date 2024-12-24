@@ -8,18 +8,21 @@ if(isset($_GET['delete']))
 {
   $id=$_GET['delete'];
 
-  $delete_emp_query="DELETE FROM employees WHERE department_id=$id";
-  $emp_delete=$pdo->prepare($delete_emp_query);
-  $emp_delete->execute();
+  // $delete_emp_query="DELETE FROM employees WHERE department_id=$id";
+  // $emp_delete=$pdo->prepare($delete_emp_query);
+  // $emp_delete->execute();
 
   $id=$_GET['delete'];
   $delete_dep_query="DELETE FROM departments WHERE id=$id";
   $dep_delete=$pdo->prepare($delete_dep_query);
   $dep_delete->execute();
   
-  if($dep_delete && $emp_delete){
+  if($dep_delete){
       path('department/list.php');
   }
+  // if($dep_delete && $emp_delete){
+  //     path('department/list.php');
+  // }
 }
 
 

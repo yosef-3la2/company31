@@ -12,9 +12,9 @@ if(isset($_GET['delete'])){
     $id=$_GET['delete'];
     
 
-    $delete_sales_query="DELETE FROM sales where customerid=$id";
-    $sale_delete=$pdo->prepare($delete_sales_query);
-    $sale_delete->execute();
+    // $delete_sales_query="DELETE FROM sales where customerid=$id";
+    // $sale_delete=$pdo->prepare($delete_sales_query);
+    // $sale_delete->execute();
     $delete_customer_query="DELETE FROM customers where id=$id";
     $customer_delete=$pdo->prepare($delete_customer_query);
     $customer_delete->execute();
@@ -46,7 +46,7 @@ $select->execute();
                <?php foreach($select as $index => $customers ):?>
               <tr>
                 <td><?= $index+1 ?></td>
-                <td><a class="text-reset" href="customerpurchase.php?customer_id=<?= $customers['id'] ?>&customer=<?=$customers['name']?>"><?=$customers['name']?></a></td>
+                <td><a class="text-reset" href="CustomerProducts.php?customer_id=<?= $customers['id'] ?>&customer=<?=$customers['name']?>"><?=$customers['name']?></a></td>
                 <td><?= $customers['email']?></td>
                 <td><?= $customers['phone']?></td>
                 <td><?= $customers['address']?></td>

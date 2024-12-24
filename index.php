@@ -43,7 +43,7 @@ $select->execute();
 ?>
 
 <div class="container">
-  <h1 class="display-1 text-center">Welcome to our market</h1>
+  <h1 class="display-1 text-center text-light">Welcome to our market</h1>
 </div>
 
 <div class="container ">
